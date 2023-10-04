@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Desafio</title>
+</head>
+
+<body>
+    <main>
+        <span class="spanAcima" id="fraseAcima"></span>
+        <form onsubmit="validar(event)">
+            <label for="name">Nome</label>
+            <input title="Insira somente o seu primeiro nome." type="text" id="name" placeholder="Nome" required>
+
+            <label for="email">Email</label>
+            <input title="Insira um email válido" type="email" id="email" placeholder="exemplo@email.com" required>
+
+            <label for="password">Crie uma senha</label>
+            <input title="Crie sua senha." type="password" id="password" placeholder="Nova senha" required>
+
+            <label for="url">URL do site</label>
+            <input title="Cole a URL do site." type="url" id="url" placeholder="https:site.com" required>
+
+            <label for="date">Dia da postagem</label>
+            <input title="Insira a data desejada para o anúncio." type="date" id="date" required>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+
+    <script>
+        const nome = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const senha = document.getElementById('password');
+        const url = document.getElementById('url');
+        const data = document.getElementById('date');
+        
+        function validar(event) {
+            const nameIsValid = validarNome(nome.value);
+            const emailIsValid = validarEmail(emailInput.value);
+            const passIsValid = validarSenha(senha.value);
+            const urlIsValid = validarUrl(url.value);
+            const dataIsValid = validarData(data.value);
+            
+            const mensagem = document.querySelector('#fraseAcima');
+
+            if (!nameIsValid) {
+                event.preventDefault();
+                mensagem.classList.add('colorR');
+                mensagem.textContent = `Por favor, insira nome válido.
+                Exemplos de nomes inválidos:
+                "joão" (a inicial não está em maiúscula)
+                "Maria Silva" (contém espaço)
+                "2Carlos" (contém um número)`;
+                // nome.focus();
+            }
+            if (!emailIsValid) {
+                event.preventDefault();
+                mensagem.classList.add("colorR");
+                mensagem.textContent = `Por favor, insira um endereço de e-mail válido.`;
+                // emailInput.focus();
+            }
+            if (!passIsValid) {
+                event.preventDefault();
+                mensagem.classList.add("colorR");
+                mensagem.textContent = `Por favor, insira uma senha válida.
+                "Senha123" (contém letras maiúsculas)
+                "abcdef" (não contém números)
+                "pass" (não possui 6 caracteres)`;
+                // senha.focus();
+            }
+            if (!urlIsValid) {
+                event.preventDefault();
+                mensagem.classList.add("colorR");
+                mensagem.textContent = `Por favor, insira uma URL válida.`;
+                // url.focus();
+            }
+            if (!dataIsValid) {
+                event.preventDefault();
+                mensagem.classList.add("colorR");
+                mensagem.textContent = `Por favor, insira uma data de nascimento válida.`;
+                // data.focus();
+            }
+        };
+        
+        function validarNome(name) {
+            const nameRegex = /^[A-Z][a-z]*$/;
+            return nameRegex.test(name);
+        }
+        function validarEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        function validarSenha(senha) {
+            const passwordRegex = /^(?=.*\d)[a-z\d]{6,}$/;
+            return passwordRegex.test(senha);
+        }
+        function validarUrl(url){
+            const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+            return urlRegex.test(url);
+        }
+        function validarData(inputDate) {
+            const partesDataNascimento = inputDate.split('/');
+            const dia = partesDataNascimento[0];
+            const mes = partesDataNascimento[1];
+            const ano = partesDataNascimento[2];
+            const dataNascimentoFormatada = `${ano}-${mes}-${dia}`;
+
+            const dataAtual = new Date().toISOString().slice(0, 10);
+
+            const diferencaEmDias = Math.floor((new Date(dataNascimentoFormatada) - new Date(dataAtual)) / (1000 * 60 * 60 * 24));
+            // Verifica se a diferença é maior ou igual a 2 dias
+            return diferencaEmDias >= 2;
+        }
+    </script>
+</body>
+
+</html>
